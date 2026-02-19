@@ -16,9 +16,7 @@ export function SearchBar({
   onSelectSuggestion,
 }: SearchBarProps) {
   const handleSelect = (selectedKeyword: string) => {
-    onChange(selectedKeyword);
     onSelectSuggestion(selectedKeyword);
-    doSearch(selectedKeyword);
   };
 
   return (

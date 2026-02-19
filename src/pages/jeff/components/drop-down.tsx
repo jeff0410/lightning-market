@@ -4,7 +4,11 @@ interface DropDownProps {
   isVisible?: boolean;
 }
 
-export function DropDown({ suggestions, onSelect, isVisible = true }: DropDownProps) {
+export function DropDown({
+  suggestions,
+  onSelect,
+  isVisible = true,
+}: DropDownProps) {
   const suggestionList = Array.isArray(suggestions) ? suggestions : [];
   if (!isVisible || suggestionList.length === 0) {
     return null;

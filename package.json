@@ -8,7 +8,8 @@
     "stg": "vite build --mode staging",
     "prod": "vite build --mode production",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "gen:dev": "curl -s 'https://api.bunjang.co.kr/api/search/v6/products-web?ref=search&q=%EB%82%98%EC%9D%B4%ED%82%A4&sort=date' | npx -y quicktype --src-lang json --lang ts -o src/lib/type/type-list.ts"
   },
   "packageManager": "pnpm@10.13.1",
   "devDependencies": {

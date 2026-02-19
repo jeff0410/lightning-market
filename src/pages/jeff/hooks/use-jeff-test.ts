@@ -1,15 +1,17 @@
 /** biome-ignore-all lint/correctness/useExhaustiveDependencies: <explanation> */
 
 import { api } from "@/lib";
-import { useCallback, useEffect, useState } from "react";
+import { Datum } from "@/lib/type/type-list";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDebounce } from "./use-debounce";
 
 export const useJeffTest = () => {
-  const [dataList, setDataList] = useState([]);
+  const [dataList, setDataList] = useState<Datum[]>([]);
   const [sort, setSort] = useState<string>("");
   const [keyword, setKeyword] = useState<string>("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const debouncedKeyword = useDebounce(keyword, 300);
+  const skipNextGetKeywords = useRef(false);
 
   useEffect(() => {
     doSearch();
@@ -34,6 +36,10 @@ export const useJeffTest = () => {
   }, []);
 
   useEffect(() => {
+    if (skipNextGetKeywords.current) {
+      skipNextGetKeywords.current = false;
+      return;
+    }
     getKeywords(debouncedKeyword);
   }, [debouncedKeyword, getKeywords]);
 
@@ -57,6 +63,16 @@ export const useJeffTest = () => {
     setSuggestions([]);
   }, []);
 
+  const selectSuggestion = useCallback(
+    (selectedKeyword: string) => {
+      skipNextGetKeywords.current = true;
+      setKeyword(selectedKeyword);
+      setSuggestions([]);
+      doSearch(selectedKeyword);
+    },
+    [doSearch],
+  );
+
   return {
     dataList,
     sort,
@@ -66,5 +82,6 @@ export const useJeffTest = () => {
     setKeyword,
     setSort,
     clearSuggestions,
+    selectSuggestion,
   };
 };
